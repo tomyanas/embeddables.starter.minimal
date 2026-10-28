@@ -6,7 +6,7 @@
   "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && em build && vite build",
+    "build": "tsc -b && vite build",
     "typecheck": "tsc -b",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@embeddables/analytics": "^0.2.0",
-    "@embeddables/core": "^0.3.1",
+    "@embeddables/core": "^0.6.0",
     "@embeddables/forms": "^0.4.1",
     "@tailwindcss/vite": "^4.3.3",
     "react": "^19.2.8",
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.64.0",
-    "@embeddables/em-cli": "^0.6.0",
+    "@embeddables/em-cli": "^0.6.1",
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",

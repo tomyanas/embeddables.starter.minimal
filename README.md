@@ -1,7 +1,10 @@
-# Embeddables Starter
+# Casa Mishi
 
-Minimal Vite, React, and Tailwind app wired to Embeddables Core and Forms. No
-protocol, brand, or multi-product setup — a clean base for a new project.
+A kitten-match funnel on the Embeddables minimal starter. Seven declared pages
+live in `embeddables/config.yaml` (`bienvenida` through `gracias`). `?force_page=`
+opens the matching route. `pnpm build` skips `em build`: the published CLI
+0.6.1 still rejects the `pages` key, and `embeddables/_dist/config.ts` already
+includes them.
 
 ## Run
 

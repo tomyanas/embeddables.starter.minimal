@@ -15,6 +15,28 @@ enabledModules:
   experiments: false
   forms: true
   protocols: false
+pages:
+  - id: bienvenida
+    title: Bienvenida
+    path: /
+  - id: energia
+    title: Energía
+    path: /quiz/energia
+  - id: hogar
+    title: Hogar
+    path: /quiz/hogar
+  - id: compania
+    title: Compañía
+    path: /quiz/compania
+  - id: match
+    title: Tu gatito
+    path: /match
+  - id: reserva
+    title: Reserva
+    path: /reserva
+  - id: gracias
+    title: Gracias
+    path: /gracias
 # Embeddables Hosting builds and deploys these apps on every push. `pnpm build` writes both
 # folders; see "Build output" in AGENTS.md.
 hosting:

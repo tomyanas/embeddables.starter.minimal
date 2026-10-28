@@ -12,7 +12,44 @@ const config = {
     "experiments": false,
     "forms": true,
     "protocols": false
-  }
+  },
+  "pages": [
+    {
+      "id": "bienvenida",
+      "path": "/",
+      "title": "Bienvenida"
+    },
+    {
+      "id": "energia",
+      "path": "/quiz/energia",
+      "title": "Energía"
+    },
+    {
+      "id": "hogar",
+      "path": "/quiz/hogar",
+      "title": "Hogar"
+    },
+    {
+      "id": "compania",
+      "path": "/quiz/compania",
+      "title": "Compañía"
+    },
+    {
+      "id": "match",
+      "path": "/match",
+      "title": "Tu gatito"
+    },
+    {
+      "id": "reserva",
+      "path": "/reserva",
+      "title": "Reserva"
+    },
+    {
+      "id": "gracias",
+      "path": "/gracias",
+      "title": "Gracias"
+    }
+  ]
 } as const;
 
 export { config };

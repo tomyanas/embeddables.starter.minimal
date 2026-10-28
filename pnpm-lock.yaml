@@ -10,13 +10,13 @@ importers:
     dependencies:
       '@embeddables/analytics':
         specifier: ^0.2.0
-        version: 0.2.0(@embeddables/core@0.3.1(react@19.3.1))(react@19.3.1)
+        version: 0.2.0(@embeddables/core@0.6.0(react@19.3.1))(react@19.3.1)
       '@embeddables/core':
-        specifier: ^0.3.1
-        version: 0.3.1(react@19.3.1)
+        specifier: ^0.6.0
+        version: 0.6.0(react@19.3.1)
       '@embeddables/forms':
         specifier: ^0.4.1
-        version: 0.4.1(@embeddables/core@0.3.1(react@19.3.1))(react@19.3.1)
+        version: 0.4.1(@embeddables/core@0.6.0(react@19.3.1))(react@19.3.1)
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
@@ -37,8 +37,8 @@ importers:
         specifier: ^1.64.0
         version: 1.64.0(@types/node@24.19.2)(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(wrangler@4.152.0(@types/node@24.19.2))
       '@embeddables/em-cli':
-        specifier: ^0.6.0
-        version: 0.6.0
+        specifier: ^0.6.1
+        version: 0.6.1
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.13.0(jiti@2.7.0))
@@ -245,14 +245,14 @@ packages:
       '@embeddables/core': '>=0.0.3'
       react: '>=18'
 
-  '@embeddables/core@0.3.1':
-    resolution: {integrity: sha512-tntSnfRcwjUIHD+vfoxAgYIWr1ASiPdFrrj+SDZHokF6kpv1NmU8A7K9Pp9DQfbb95VjH/uEkAADV0ZRUnHEoQ==}
+  '@embeddables/core@0.6.0':
+    resolution: {integrity: sha512-Ez7i8DiHyzJjxEQv175g6zxWIelHXjt+Qh7NqINfE9fX5gma1pLMnJJsr/6WIE6H4IvztKxSIrx/0G1uDGE/+w==}
     engines: {node: '>=20'}
     peerDependencies:
       react: '>=18'
 
-  '@embeddables/em-cli@0.6.0':
-    resolution: {integrity: sha512-3D5uzGeksptCv9LjwmWI/Ad5qD5BiKCAx3knJwpvgZS8stCRg8wIkJdDKmUNJhWLJsy9PKziuzc1UTu3OsMzeQ==}
+  '@embeddables/em-cli@0.6.1':
+    resolution: {integrity: sha512-LgBKKz6yEydHpe459nC4CWuBWqt/0+eeYvu52dUIH7wyQLYxsHTifpwk14AEDDHKr2dP8dztGd50iTbe0WoVFg==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -1873,26 +1873,26 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@embeddables/analytics@0.2.0(@embeddables/core@0.3.1(react@19.3.1))(react@19.3.1)':
+  '@embeddables/analytics@0.2.0(@embeddables/core@0.6.0(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@embeddables/core': 0.3.1(react@19.3.1)
+      '@embeddables/core': 0.6.0(react@19.3.1)
       hono: 4.13.13
       react: 19.3.1
       zod: 4.6.7
 
-  '@embeddables/core@0.3.1(react@19.3.1)':
+  '@embeddables/core@0.6.0(react@19.3.1)':
     dependencies:
       react: 19.3.1
 
-  '@embeddables/em-cli@0.6.0':
+  '@embeddables/em-cli@0.6.1':
     dependencies:
       prompts: 2.4.2
       yaml: 2.9.1
       zod: 4.6.7
 
-  '@embeddables/forms@0.4.1(@embeddables/core@0.3.1(react@19.3.1))(react@19.3.1)':
+  '@embeddables/forms@0.4.1(@embeddables/core@0.6.0(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@embeddables/core': 0.3.1(react@19.3.1)
+      '@embeddables/core': 0.6.0(react@19.3.1)
       hono: 4.13.13
       react: 19.3.1
 
