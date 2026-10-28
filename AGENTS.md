@@ -8,7 +8,7 @@ Embeddables Core and Forms — the base to customize for a new project.
 ```bash
 pnpm install
 pnpm dev              # local app
-pnpm build            # tsc, em build, vite build
+pnpm build            # tsc, vite build
 pnpm typecheck        # tsc -b only
 pnpm lint             # ESLint
 pnpm format           # Prettier write

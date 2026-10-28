@@ -1,0 +1,30 @@
+name: Deploy
+on:
+  push:
+  pull_request:
+    types: [opened, reopened]
+permissions:
+  contents: read
+  pull-requests: write
+concurrency:
+  group: deploy-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+
+      - uses: heysavvy/embeddables-actions/embeddables-deploy@v1
+        with:
+          deploy-key: ${{ secrets.EMBEDDABLES_DEPLOY_KEY }}

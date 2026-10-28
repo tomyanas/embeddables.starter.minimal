@@ -8,5 +8,5 @@
   "assets": { "binding": "ASSETS" },
   // The project's publishable key. It is public by design, so it can live here; `vite build`
   // reads it into the app when EMBEDDABLES_PUBLISHABLE_KEY is not set in the environment.
-  "vars": { "EMBEDDABLES_PUBLISHABLE_KEY": "" },
+  "vars": { "EMBEDDABLES_PUBLISHABLE_KEY": "pk_live_d66000725a49ee54a9896b3c19ae17c20fdee36949c0870aa6db8dab2e4d637f" },
 }
