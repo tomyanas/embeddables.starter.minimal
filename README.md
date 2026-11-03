@@ -2,9 +2,8 @@
 
 A kitten-match funnel on the Embeddables minimal starter. Seven declared pages
 live in `embeddables/config.yaml` (`bienvenida` through `gracias`). `?force_page=`
-opens the matching route. `pnpm build` skips `em build`: the published CLI
-0.6.1 still rejects the `pages` key, and `embeddables/_dist/config.ts` already
-includes them.
+opens the matching route. Each page declares a `type` and `app: app`.
+`pnpm exec em build` writes `embeddables/_dist/config.ts` from that file.
 
 ## Run
 

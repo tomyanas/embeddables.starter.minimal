@@ -37,8 +37,8 @@ importers:
         specifier: ^1.64.0
         version: 1.64.0(@types/node@24.19.2)(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(wrangler@4.152.0(@types/node@24.19.2))
       '@embeddables/em-cli':
-        specifier: ^0.6.1
-        version: 0.6.1
+        specifier: ^0.6.2
+        version: 0.6.2
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.13.0(jiti@2.7.0))
@@ -251,8 +251,8 @@ packages:
     peerDependencies:
       react: '>=18'
 
-  '@embeddables/em-cli@0.6.1':
-    resolution: {integrity: sha512-LgBKKz6yEydHpe459nC4CWuBWqt/0+eeYvu52dUIH7wyQLYxsHTifpwk14AEDDHKr2dP8dztGd50iTbe0WoVFg==}
+  '@embeddables/em-cli@0.6.2':
+    resolution: {integrity: sha512-b0dyGhUh4bA2PW4ftJ2q17N8lj3XxGRTXEtPPcpc9HC8BayWOg0AZx5qmRX8S78u40bqnIHolIL5eY31uwmExQ==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -1884,7 +1884,7 @@ snapshots:
     dependencies:
       react: 19.3.1
 
-  '@embeddables/em-cli@0.6.1':
+  '@embeddables/em-cli@0.6.2':
     dependencies:
       prompts: 2.4.2
       yaml: 2.9.1
