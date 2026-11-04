@@ -8,6 +8,7 @@ forms:
   # - id: "<second-form-uuid>"
   #   name: Second form
 experiments:
+  - id: '0f7d2907-0313-4583-a282-599d1fb55b59'
 protocols:
 enabledModules:
   analytics: true
