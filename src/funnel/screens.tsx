@@ -215,6 +215,8 @@ function Field({
   onChange,
   onBlur,
   type = 'text',
+  autoComplete,
+  disabled,
 }: {
   label: string
   value: string
@@ -222,14 +224,19 @@ function Field({
   onChange: (value: string) => void
   onBlur: () => void
   type?: string
+  autoComplete?: string
+  disabled?: boolean
 }) {
   return (
     <label className="block space-y-1">
       <span className="text-sm font-medium">{label}</span>
       <input
-        className="w-full rounded-2xl border border-[#eadccc] bg-white px-3 py-3 text-base outline-none focus:border-[#d4653a]"
+        className="w-full rounded-2xl border border-[#eadccc] bg-white px-3 py-3 text-base outline-none focus:border-[#d4653a] disabled:opacity-60"
         type={type}
         value={value}
+        autoComplete={autoComplete}
+        disabled={disabled}
+        aria-invalid={error ? true : undefined}
         onChange={(event) => onChange(event.target.value)}
         onBlur={onBlur}
       />
@@ -259,5 +266,225 @@ export function GraciasPage() {
         Empezar de nuevo
       </button>
     </Frame>
+  )
+}
+
+// * "Adopta" funnel: cold traffic -> short quiz -> match -> lead capture -> /gracias.
+const ADOPTA_PATHS = {
+  energia: '/adopta/energia',
+  hogar: '/adopta/hogar',
+  match: '/adopta/match',
+  contacto: '/adopta/contacto',
+} as const
+
+const ADOPTA_PROOF_POINTS = [
+  'Menos de un minuto',
+  'Gatitos con historia real',
+  'El mail queda para el final',
+] as const
+
+export function AdoptaLandingPage() {
+  usePageView({ pageKey: 'adopta' })
+
+  return (
+    <Frame
+      eyebrow="Adoptar con calma"
+      title="Encontrá al gatito que encaja con tu casa."
+      lede="Dos preguntas, un match y una visita. Sin catálogos eternos y sin compromiso."
+    >
+      <ul className="grid gap-3 sm:grid-cols-3">
+        {ADOPTA_PROOF_POINTS.map((point) => (
+          <li
+            key={point}
+            className="rounded-2xl border border-[#eadccc] bg-[#fff8f1] px-4 py-3 text-sm text-[#5c4d42]"
+          >
+            {point}
+          </li>
+        ))}
+      </ul>
+      <NextLink to={ADOPTA_PATHS.energia}>Encontrar mi match</NextLink>
+    </Frame>
+  )
+}
+
+export function AdoptaEnergiaPage() {
+  const navigate = useNavigate()
+  usePageView({ pageKey: 'adopta-energia' })
+
+  return (
+    <Frame step={1} eyebrow="La casa" title="¿Cómo se siente un martes a la noche?">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Choice
+          title="Calma"
+          detail="Un libro, una lámpara, y nadie corre por el pasillo."
+          onClick={() => {
+            saveEnergia('calma')
+            navigate(ADOPTA_PATHS.hogar)
+          }}
+        />
+        <Choice
+          title="Juego"
+          detail="Siempre hay alguien persiguiendo algo, aunque sea una tapa."
+          onClick={() => {
+            saveEnergia('juego')
+            navigate(ADOPTA_PATHS.hogar)
+          }}
+        />
+      </div>
+    </Frame>
+  )
+}
+
+export function AdoptaHogarPage() {
+  const navigate = useNavigate()
+  usePageView({ pageKey: 'adopta-hogar' })
+
+  return (
+    <Frame step={2} eyebrow="El lugar" title="¿Dónde va a dormir la siesta?">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Choice
+          title="Departamento"
+          detail="Una ventana, un sillón, y el sol de las tres."
+          onClick={() => {
+            saveHogar('depto')
+            navigate(ADOPTA_PATHS.match)
+          }}
+        />
+        <Choice
+          title="Casa"
+          detail="Patio, macetas, y una puerta que se abre."
+          onClick={() => {
+            saveHogar('casa')
+            navigate(ADOPTA_PATHS.match)
+          }}
+        />
+      </div>
+    </Frame>
+  )
+}
+
+export function AdoptaMatchPage() {
+  usePageView({ pageKey: 'adopta-match' })
+  const kitten = chosenKitten(readAnswers())
+
+  return (
+    <Frame step={3} eyebrow="Tu match" title={`${kitten.name} te está esperando.`}>
+      <article className="overflow-hidden rounded-[2rem] border border-[#eadccc] bg-[#fff8f1]">
+        <div className="flex justify-center bg-[#f6e6d6] pt-4">
+          <CatMark kitten={kitten} className="h-40 w-44" />
+        </div>
+        <div className="space-y-3 px-5 py-5">
+          <p className="text-lg leading-snug">{kitten.line}</p>
+          <p className="text-sm leading-relaxed text-[#5c4d42]">{kitten.story}</p>
+          <p className="text-sm text-[#8a7564]">
+            {kitten.coat} · {kitten.age}
+          </p>
+        </div>
+      </article>
+      <NextLink to={ADOPTA_PATHS.contacto}>Quiero conocer a {kitten.name}</NextLink>
+    </Frame>
+  )
+}
+
+export function AdoptaContactoPage() {
+  const embeddables = useEmbeddables()
+  const kitten = chosenKitten(readAnswers())
+  usePageView({ pageKey: 'adopta-contacto' })
+  const initError =
+    embeddables?.isError && embeddables.error instanceof Error
+      ? embeddables.error.message
+      : embeddables?.isError
+        ? 'Embeddables no pudo iniciar.'
+        : null
+
+  return (
+    <Frame
+      step={4}
+      eyebrow={kitten.name}
+      title="¿A dónde te escribimos?"
+      lede={`Dejá tu nombre y tu mail y te contamos cómo conocer a ${kitten.name}.`}
+    >
+      {initError ? (
+        <p role="alert" className="text-sm text-red-800">
+          {initError}
+        </p>
+      ) : embeddables == null ? (
+        <p role="status" className="text-sm text-[#6d5b4d]">
+          Cargando…
+        </p>
+      ) : (
+        <AdoptaLeadForm />
+      )}
+    </Frame>
+  )
+}
+
+function AdoptaLeadForm() {
+  const navigate = useNavigate()
+  const { form } = useForm({ formId: CONTACT_FORM_ID })
+  const name = useFormField({ form, key: 'name' })
+  const email = useFormField({ form, key: 'email' })
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
+  return (
+    <form
+      className="space-y-4"
+      noValidate
+      aria-busy={submitting}
+      onSubmit={(event) => {
+        event.preventDefault()
+        if (form == null || submitting) return
+        setSubmitError(null)
+        setSubmitting(true)
+        void form
+          .submit()
+          .then((result) => {
+            if (result.ok) {
+              navigate('/gracias')
+              return
+            }
+            setSubmitError('Revisá el nombre y el mail.')
+          })
+          .catch(() => {
+            setSubmitError('No pudimos enviar tus datos. Probá de nuevo en un momento.')
+          })
+          .finally(() => {
+            setSubmitting(false)
+          })
+      }}
+    >
+      <Field
+        label="Nombre"
+        autoComplete="name"
+        disabled={submitting}
+        value={(name.value as string | undefined) ?? ''}
+        error={name.error?.[0]}
+        onChange={(value) => name.setValue(value)}
+        onBlur={() => void name.onBlur()}
+      />
+      <Field
+        label="Mail"
+        type="email"
+        autoComplete="email"
+        disabled={submitting}
+        value={(email.value as string | undefined) ?? ''}
+        error={email.error?.[0]}
+        onChange={(value) => email.setValue(value)}
+        onBlur={() => void email.onBlur()}
+      />
+      {submitError ? (
+        <p role="alert" className="text-sm text-red-800">
+          {submitError}
+        </p>
+      ) : null}
+      <button
+        type="submit"
+        disabled={form == null || submitting}
+        className="w-full rounded-full bg-[#241c16] px-5 py-3 text-sm font-medium text-[#f7f1e8] hover:bg-[#3a2e24] disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
+      >
+        {submitting ? 'Enviando…' : 'Quiero conocerlo'}
+      </button>
+    </form>
   )
 }

@@ -48,6 +48,31 @@ const config = {
       "id": "gracias",
       "path": "/gracias",
       "title": "Gracias"
+    },
+    {
+      "id": "adopta",
+      "path": "/adopta",
+      "title": "Adopta"
+    },
+    {
+      "id": "adopta-energia",
+      "path": "/adopta/energia",
+      "title": "Adopta - Energía"
+    },
+    {
+      "id": "adopta-hogar",
+      "path": "/adopta/hogar",
+      "title": "Adopta - Hogar"
+    },
+    {
+      "id": "adopta-match",
+      "path": "/adopta/match",
+      "title": "Adopta - Tu gatito"
+    },
+    {
+      "id": "adopta-contacto",
+      "path": "/adopta/contacto",
+      "title": "Adopta - Contacto"
     }
   ]
 } as const;

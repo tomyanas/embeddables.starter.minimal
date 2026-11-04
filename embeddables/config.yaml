@@ -50,6 +50,31 @@ pages:
     path: /gracias
     type: landing
     app: app
+  - id: adopta
+    title: Adopta
+    path: /adopta
+    type: marketing
+    app: app
+  - id: adopta-energia
+    title: Adopta - Energía
+    path: /adopta/energia
+    type: form
+    app: app
+  - id: adopta-hogar
+    title: Adopta - Hogar
+    path: /adopta/hogar
+    type: form
+    app: app
+  - id: adopta-match
+    title: Adopta - Tu gatito
+    path: /adopta/match
+    type: pdp
+    app: app
+  - id: adopta-contacto
+    title: Adopta - Contacto
+    path: /adopta/contacto
+    type: form
+    app: app
 # Embeddables Hosting builds and deploys these apps on every push. `pnpm build` writes both
 # folders; see "Build output" in AGENTS.md.
 hosting:
