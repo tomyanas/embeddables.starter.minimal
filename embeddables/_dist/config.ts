@@ -35,6 +35,11 @@ const config = {
       "title": "Compañía"
     },
     {
+      "id": "nacimiento",
+      "path": "/quiz/nacimiento",
+      "title": "Fecha de nacimiento"
+    },
+    {
       "id": "match",
       "path": "/match",
       "title": "Tu gatito"

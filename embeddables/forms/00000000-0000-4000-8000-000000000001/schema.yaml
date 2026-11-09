@@ -13,3 +13,9 @@ fields:
     display_text: Email
     validations:
       required: true
+  - key: birth_date
+    label: Birth date
+    value_type: text
+    display_text: Birth date
+    validations:
+      required: false

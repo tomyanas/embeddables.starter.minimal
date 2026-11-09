@@ -10,6 +10,7 @@ import {
   saveCompania,
   saveEnergia,
   saveHogar,
+  saveNacimiento,
 } from '@/funnel/answers.ts'
 import { CatMark } from '@/funnel/CatMark.tsx'
 import { chosenKitten } from '@/funnel/kittens.ts'
@@ -22,9 +23,9 @@ export function WelcomePage() {
 
   return (
     <Frame
-      eyebrow="Cuatro pasos"
+      eyebrow="Cinco pasos"
       title="Un gatito, no un catálogo."
-      lede="Contestá tres preguntas y te presentamos al que mejor encaja con tu casa. El mail queda para el final."
+      lede="Contestá cuatro preguntas y te presentamos al que mejor encaja con tu casa. El mail queda para el final."
     >
       <NextLink to="/quiz/energia">Empezar</NextLink>
     </Frame>
@@ -36,7 +37,7 @@ export function EnergiaPage() {
   usePageView({ pageKey: 'energia' })
 
   return (
-    <Frame step={1} eyebrow="La casa" title="¿Cómo se siente un martes a la noche?">
+    <Frame step={1} total={5} eyebrow="La casa" title="¿Cómo se siente un martes a la noche?">
       <Choice
         title="Calma"
         detail="Un libro, una lámpara, y nadie corre por el pasillo."
@@ -62,7 +63,7 @@ export function HogarPage() {
   usePageView({ pageKey: 'hogar' })
 
   return (
-    <Frame step={2} eyebrow="El lugar" title="¿Dónde va a dormir la siesta?">
+    <Frame step={2} total={5} eyebrow="El lugar" title="¿Dónde va a dormir la siesta?">
       <Choice
         title="Departamento"
         detail="Una ventana, un sillón, y el sol de las tres."
@@ -88,13 +89,13 @@ export function CompaniaPage() {
   usePageView({ pageKey: 'compania' })
 
   return (
-    <Frame step={3} eyebrow="Vos" title="¿Qué querés que haga cuando llegás?">
+    <Frame step={3} total={5} eyebrow="Vos" title="¿Qué querés que haga cuando llegás?">
       <Choice
         title="Que se suba y se quede"
         detail="Compañía de siesta. Poco teatro."
         onClick={() => {
           saveCompania('siesta')
-          navigate('/match')
+          navigate('/quiz/nacimiento')
         }}
       />
       <Choice
@@ -102,10 +103,122 @@ export function CompaniaPage() {
         detail="Una hoja, un cordón, una carrera hasta la cocina."
         onClick={() => {
           saveCompania('travesura')
-          navigate('/match')
+          navigate('/quiz/nacimiento')
         }}
       />
     </Frame>
+  )
+}
+
+function todayIso() {
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  return `${now.getFullYear()}-${month}-${day}`
+}
+
+function birthDateError(value: string): string | null {
+  if (value.trim() === '') return 'Elegí tu fecha de nacimiento.'
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return 'Ingresá una fecha válida.'
+  const parsed = new Date(`${value}T00:00:00`)
+  if (Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== value) {
+    return 'Ingresá una fecha válida.'
+  }
+  if (value > todayIso()) return 'La fecha no puede ser futura.'
+  if (value < '1900-01-01') return 'Ingresá una fecha válida.'
+  return null
+}
+
+export function NacimientoPage() {
+  const embeddables = useEmbeddables()
+  usePageView({ pageKey: 'nacimiento' })
+  const initError =
+    embeddables?.isError && embeddables.error instanceof Error
+      ? embeddables.error.message
+      : embeddables?.isError
+        ? 'Embeddables no pudo iniciar.'
+        : null
+
+  return (
+    <Frame
+      step={4}
+      total={5}
+      eyebrow="Vos"
+      title="¿Cuándo naciste?"
+      lede="Lo usamos para conocerte un poco mejor antes de presentarte a tu gatito."
+    >
+      {initError ? (
+        <p role="alert" className="text-sm text-red-800">
+          {initError}
+        </p>
+      ) : embeddables == null ? (
+        <p role="status" className="text-sm text-[#6d5b4d]">
+          Cargando…
+        </p>
+      ) : (
+        <BirthDateForm />
+      )}
+    </Frame>
+  )
+}
+
+function BirthDateForm() {
+  const navigate = useNavigate()
+  const { form } = useForm({ formId: CONTACT_FORM_ID })
+  const birthDate = useFormField({ form, key: 'birth_date' })
+  const [value, setValue] = useState(readAnswers().nacimiento ?? '')
+  const [error, setError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+
+  return (
+    <form
+      className="space-y-4"
+      noValidate
+      aria-busy={submitting}
+      onSubmit={(event) => {
+        event.preventDefault()
+        if (submitting) return
+        const message = birthDateError(value)
+        setError(message)
+        if (message != null) return
+        setSubmitting(true)
+        saveNacimiento(value)
+        birthDate.setValue(value)
+        navigate('/match')
+      }}
+    >
+      <label className="block space-y-1">
+        <span className="text-sm font-medium">Fecha de nacimiento</span>
+        <input
+          className="w-full rounded-2xl border border-[#eadccc] bg-white px-3 py-3 text-base outline-none focus:border-[#d4653a] disabled:opacity-60"
+          type="date"
+          name="bday"
+          autoComplete="bday"
+          min="1900-01-01"
+          max={todayIso()}
+          value={value}
+          disabled={submitting}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? 'nacimiento-error' : undefined}
+          onChange={(event) => {
+            setValue(event.target.value)
+            if (error != null) setError(null)
+          }}
+        />
+        {error ? (
+          <p id="nacimiento-error" role="alert" className="text-sm text-red-800">
+            {error}
+          </p>
+        ) : null}
+      </label>
+      <button
+        type="submit"
+        disabled={form == null || submitting}
+        className="w-full rounded-full bg-[#241c16] px-5 py-3 text-sm font-medium text-[#f7f1e8] hover:bg-[#3a2e24] disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
+      >
+        {submitting ? 'Guardando…' : 'Continuar'}
+      </button>
+    </form>
   )
 }
 
@@ -114,7 +227,7 @@ export function MatchPage() {
   const kitten = chosenKitten(readAnswers())
 
   return (
-    <Frame step={4} eyebrow="Tu match" title={`${kitten.name} te está esperando.`}>
+    <Frame step={5} total={5} eyebrow="Tu match" title={`${kitten.name} te está esperando.`}>
       <article className="overflow-hidden rounded-[2rem] border border-[#eadccc] bg-[#fff8f1]">
         <div className="flex justify-center bg-[#f6e6d6] pt-4">
           <CatMark kitten={kitten} className="h-40 w-44" />

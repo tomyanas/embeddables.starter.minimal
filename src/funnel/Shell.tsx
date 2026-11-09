@@ -3,12 +3,14 @@ import { Link } from 'react-router'
 
 export function Frame({
   step,
+  total = 4,
   eyebrow,
   title,
   lede,
   children,
 }: {
   step?: number
+  total?: number
   eyebrow: string
   title: string
   lede?: string
@@ -18,7 +20,7 @@ export function Frame({
     <main className="mx-auto flex min-h-svh w-full max-w-xl flex-col px-5 py-8 sm:px-8">
       <header className="flex items-center justify-between gap-4">
         <p className="text-sm font-medium tracking-[0.14em] uppercase">Casa Mishi</p>
-        {step != null ? <p className="text-sm text-[#8a7564]">{step} de 4</p> : <span />}
+        {step != null ? <p className="text-sm text-[#8a7564]">{step} de {total}</p> : <span />}
       </header>
       <div className="flex flex-1 flex-col justify-center py-10">
         <p className="text-sm font-medium text-[#d4653a]">{eyebrow}</p>

@@ -30,6 +30,10 @@ export function saveCompania(value: Compania) {
   writeAnswers({ ...readAnswers(), compania: value })
 }
 
+export function saveNacimiento(value: string) {
+  writeAnswers({ ...readAnswers(), nacimiento: value })
+}
+
 export function clearAnswers() {
   sessionStorage.removeItem(STORAGE_KEY)
 }
