@@ -2,10 +2,20 @@ export type Energia = 'calma' | 'juego'
 export type Hogar = 'depto' | 'casa'
 export type Compania = 'siesta' | 'travesura'
 
+export type Edad = '18-24' | '25-34' | '35-49' | '50+'
+
+export const AGE_RANGES = [
+  { value: '18-24', label: '18 a 24 años' },
+  { value: '25-34', label: '25 a 34 años' },
+  { value: '35-49', label: '35 a 49 años' },
+  { value: '50+', label: '50 años o más' },
+] as const satisfies readonly { value: Edad; label: string }[]
+
 export type Answers = {
   energia?: Energia
   hogar?: Hogar
   compania?: Compania
+  edad?: Edad
 }
 
 export type Kitten = {
