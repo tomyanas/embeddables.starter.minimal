@@ -6,6 +6,7 @@ export type Answers = {
   energia?: Energia
   hogar?: Hogar
   compania?: Compania
+  nacimiento?: string
 }
 
 export type Kitten = {

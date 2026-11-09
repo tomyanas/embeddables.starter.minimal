@@ -19,6 +19,16 @@ const schema = {
         "required": true
       },
       "value_type": "email"
+    },
+    {
+      "display_text": "Birth date",
+      "field_type": "user_input",
+      "key": "birth_date",
+      "label": "Birth date",
+      "validations": {
+        "required": false
+      },
+      "value_type": "text"
     }
   ],
   "id": "00000000-0000-4000-8000-000000000001",

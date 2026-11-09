@@ -36,6 +36,11 @@ pages:
     path: /quiz/compania
     type: form
     app: app
+  - id: nacimiento
+    title: Fecha de nacimiento
+    path: /quiz/nacimiento
+    type: form
+    app: app
   - id: match
     title: Tu gatito
     path: /match
