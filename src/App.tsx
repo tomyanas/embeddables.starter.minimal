@@ -10,6 +10,7 @@ import {
   AdoptaLandingPage,
   AdoptaMatchPage,
   CompaniaPage,
+  EdadPage,
   EnergiaPage,
   GraciasPage,
   HogarPage,
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="quiz/energia" element={<EnergiaPage />} />
         <Route path="quiz/hogar" element={<HogarPage />} />
         <Route path="quiz/compania" element={<CompaniaPage />} />
+        <Route path="quiz/edad" element={<EdadPage />} />
         <Route path="match" element={<MatchPage />} />
         <Route path="reserva" element={<ReservaPage />} />
         <Route path="gracias" element={<GraciasPage />} />

@@ -1,4 +1,5 @@
-import type { Answers, Compania, Energia, Hogar } from '@/funnel/kittens.ts'
+import { AGE_RANGES } from '@/funnel/kittens.ts'
+import type { Answers, Compania, Edad, Energia, Hogar } from '@/funnel/kittens.ts'
 
 const STORAGE_KEY = 'casa-mishi-answers'
 
@@ -28,6 +29,11 @@ export function saveHogar(value: Hogar) {
 
 export function saveCompania(value: Compania) {
   writeAnswers({ ...readAnswers(), compania: value })
+}
+
+export function saveEdad(value: Edad) {
+  if (!AGE_RANGES.some((range) => range.value === value)) return
+  writeAnswers({ ...readAnswers(), edad: value })
 }
 
 export function clearAnswers() {

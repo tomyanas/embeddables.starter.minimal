@@ -3,12 +3,14 @@ import { Link } from 'react-router'
 
 export function Frame({
   step,
+  totalSteps = 4,
   eyebrow,
   title,
   lede,
   children,
 }: {
   step?: number
+  totalSteps?: number
   eyebrow: string
   title: string
   lede?: string
@@ -18,7 +20,7 @@ export function Frame({
     <main className="mx-auto flex min-h-svh w-full max-w-xl flex-col px-5 py-8 sm:px-8">
       <header className="flex items-center justify-between gap-4">
         <p className="text-sm font-medium tracking-[0.14em] uppercase">Casa Mishi</p>
-        {step != null ? <p className="text-sm text-[#8a7564]">{step} de 4</p> : <span />}
+        {step != null ? <p className="text-sm text-[#8a7564]">{step} de {totalSteps}</p> : <span />}
       </header>
       <div className="flex flex-1 flex-col justify-center py-10">
         <p className="text-sm font-medium text-[#d4653a]">{eyebrow}</p>
@@ -38,19 +40,29 @@ export function Choice({
   title,
   detail,
   onClick,
+  disabled,
+  selected,
 }: {
   title: string
-  detail: string
+  detail?: string
   onClick: () => void
+  disabled?: boolean
+  selected?: boolean
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="rounded-3xl border border-[#eadccc] bg-[#fff8f1] px-5 py-4 text-left transition hover:-translate-y-0.5 hover:border-[#d4653a]"
+      disabled={disabled}
+      aria-pressed={selected}
+      className={`rounded-3xl border bg-[#fff8f1] px-5 py-4 text-left transition enabled:hover:-translate-y-0.5 enabled:hover:border-[#d4653a] disabled:cursor-not-allowed ${
+        selected ? 'border-[#d4653a]' : 'border-[#eadccc] disabled:opacity-60'
+      }`}
     >
       <span className="block text-lg font-medium">{title}</span>
-      <span className="mt-1 block text-sm leading-relaxed text-[#6d5b4d]">{detail}</span>
+      {detail ? (
+        <span className="mt-1 block text-sm leading-relaxed text-[#6d5b4d]">{detail}</span>
+      ) : null}
     </button>
   )
 }

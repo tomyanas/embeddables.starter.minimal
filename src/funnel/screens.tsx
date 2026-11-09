@@ -8,11 +8,12 @@ import {
   clearAnswers,
   readAnswers,
   saveCompania,
+  saveEdad,
   saveEnergia,
   saveHogar,
 } from '@/funnel/answers.ts'
 import { CatMark } from '@/funnel/CatMark.tsx'
-import { chosenKitten } from '@/funnel/kittens.ts'
+import { AGE_RANGES, chosenKitten, type Edad } from '@/funnel/kittens.ts'
 import { Choice, Frame, NextLink } from '@/funnel/Shell.tsx'
 
 const CONTACT_FORM_ID = '00000000-0000-4000-8000-000000000001'
@@ -22,9 +23,9 @@ export function WelcomePage() {
 
   return (
     <Frame
-      eyebrow="Cuatro pasos"
+      eyebrow="Cinco pasos"
       title="Un gatito, no un catálogo."
-      lede="Contestá tres preguntas y te presentamos al que mejor encaja con tu casa. El mail queda para el final."
+      lede="Contestá cuatro preguntas y te presentamos al que mejor encaja con tu casa. El mail queda para el final."
     >
       <NextLink to="/quiz/energia">Empezar</NextLink>
     </Frame>
@@ -36,7 +37,12 @@ export function EnergiaPage() {
   usePageView({ pageKey: 'energia' })
 
   return (
-    <Frame step={1} eyebrow="La casa" title="¿Cómo se siente un martes a la noche?">
+    <Frame
+      step={1}
+      totalSteps={5}
+      eyebrow="La casa"
+      title="¿Cómo se siente un martes a la noche?"
+    >
       <Choice
         title="Calma"
         detail="Un libro, una lámpara, y nadie corre por el pasillo."
@@ -62,7 +68,7 @@ export function HogarPage() {
   usePageView({ pageKey: 'hogar' })
 
   return (
-    <Frame step={2} eyebrow="El lugar" title="¿Dónde va a dormir la siesta?">
+    <Frame step={2} totalSteps={5} eyebrow="El lugar" title="¿Dónde va a dormir la siesta?">
       <Choice
         title="Departamento"
         detail="Una ventana, un sillón, y el sol de las tres."
@@ -88,13 +94,13 @@ export function CompaniaPage() {
   usePageView({ pageKey: 'compania' })
 
   return (
-    <Frame step={3} eyebrow="Vos" title="¿Qué querés que haga cuando llegás?">
+    <Frame step={3} totalSteps={5} eyebrow="Vos" title="¿Qué querés que haga cuando llegás?">
       <Choice
         title="Que se suba y se quede"
         detail="Compañía de siesta. Poco teatro."
         onClick={() => {
           saveCompania('siesta')
-          navigate('/match')
+          navigate('/quiz/edad')
         }}
       />
       <Choice
@@ -102,9 +108,47 @@ export function CompaniaPage() {
         detail="Una hoja, un cordón, una carrera hasta la cocina."
         onClick={() => {
           saveCompania('travesura')
-          navigate('/match')
+          navigate('/quiz/edad')
         }}
       />
+    </Frame>
+  )
+}
+
+export function EdadPage() {
+  const navigate = useNavigate()
+  const [selected, setSelected] = useState<Edad | null>(null)
+  usePageView({ pageKey: 'edad' })
+
+  return (
+    <Frame
+      step={4}
+      totalSteps={5}
+      eyebrow="Para conocerte"
+      title="¿Cuántos años tenés?"
+      lede="Es solo para conocerte un poco mejor. No cambia al gatito que te toca."
+    >
+      <div
+        role="group"
+        aria-label="Rango de edad"
+        aria-busy={selected != null}
+        className="grid gap-3 sm:grid-cols-2"
+      >
+        {AGE_RANGES.map((range) => (
+          <Choice
+            key={range.value}
+            title={range.label}
+            selected={selected === range.value}
+            disabled={selected != null}
+            onClick={() => {
+              if (selected != null) return
+              setSelected(range.value)
+              saveEdad(range.value)
+              navigate('/match')
+            }}
+          />
+        ))}
+      </div>
     </Frame>
   )
 }
@@ -114,7 +158,12 @@ export function MatchPage() {
   const kitten = chosenKitten(readAnswers())
 
   return (
-    <Frame step={4} eyebrow="Tu match" title={`${kitten.name} te está esperando.`}>
+    <Frame
+      step={5}
+      totalSteps={5}
+      eyebrow="Tu match"
+      title={`${kitten.name} te está esperando.`}
+    >
       <article className="overflow-hidden rounded-[2rem] border border-[#eadccc] bg-[#fff8f1]">
         <div className="flex justify-center bg-[#f6e6d6] pt-4">
           <CatMark kitten={kitten} className="h-40 w-44" />
