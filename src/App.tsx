@@ -15,6 +15,7 @@ import {
   HogarPage,
   MatchPage,
   ReservaPage,
+  RestPage,
   WelcomePage,
 } from '@/funnel/screens.tsx'
 
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="quiz/energia" element={<EnergiaPage />} />
         <Route path="quiz/hogar" element={<HogarPage />} />
         <Route path="quiz/compania" element={<CompaniaPage />} />
+        <Route path="quiz/descanso" element={<RestPage />} />
         <Route path="match" element={<MatchPage />} />
         <Route path="reserva" element={<ReservaPage />} />
         <Route path="gracias" element={<GraciasPage />} />

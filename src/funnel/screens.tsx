@@ -1,6 +1,6 @@
 import { useEmbeddables } from '@embeddables/core/react'
 import { useForm, useFormField } from '@embeddables/forms/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { usePageView } from '@/usePageView.ts'
@@ -94,7 +94,7 @@ export function CompaniaPage() {
         detail="Compañía de siesta. Poco teatro."
         onClick={() => {
           saveCompania('siesta')
-          navigate('/match')
+          navigate('/quiz/descanso')
         }}
       />
       <Choice
@@ -102,9 +102,80 @@ export function CompaniaPage() {
         detail="Una hoja, un cordón, una carrera hasta la cocina."
         onClick={() => {
           saveCompania('travesura')
-          navigate('/match')
+          navigate('/quiz/descanso')
         }}
       />
+    </Frame>
+  )
+}
+
+const REST_AD_LOAD_MS = 900
+
+export function RestPage() {
+  const navigate = useNavigate()
+  usePageView({ pageKey: 'descanso' })
+  const [adReady, setAdReady] = useState(false)
+  const [continuing, setContinuing] = useState(false)
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setAdReady(true), REST_AD_LOAD_MS)
+    return () => window.clearTimeout(timer)
+  }, [])
+
+  // * Validation: the rest step sits between the quiz and the match, so it needs the quiz answers.
+  const answers = readAnswers()
+  if (answers.energia == null || answers.hogar == null || answers.compania == null) {
+    return (
+      <Frame
+        eyebrow="Un momento"
+        title="Faltan tus respuestas."
+        lede="Para mostrarte a tu gatito necesitamos las tres respuestas del quiz."
+      >
+        <p role="alert" className="text-sm text-red-800">
+          No encontramos tus respuestas guardadas.
+        </p>
+        <NextLink to="/quiz/energia">Volver al quiz</NextLink>
+      </Frame>
+    )
+  }
+
+  return (
+    <Frame
+      eyebrow="Un respiro"
+      title="Tomate un segundo."
+      lede="Estamos buscando al gatito que mejor encaja con tus respuestas."
+    >
+      <div
+        data-slot="rest-ad-placeholder"
+        role="status"
+        aria-busy={!adReady}
+        aria-label="Espacio publicitario"
+        className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-[2rem] border border-dashed border-[#d9c6b2] bg-[#f6e6d6] sm:aspect-[16/9]"
+      >
+        {adReady ? (
+          <div className="px-6 text-center">
+            <p className="text-xs font-medium tracking-[0.14em] text-[#8a7564] uppercase">
+              Publicidad
+            </p>
+            <p className="mt-2 text-base text-[#5c4d42]">Espacio reservado para el anuncio</p>
+            <p className="mt-1 text-sm text-[#8a7564]">300 × 250 · placeholder</p>
+          </div>
+        ) : (
+          <div className="absolute inset-0 animate-pulse bg-[#efdcc8]" />
+        )}
+      </div>
+      <button
+        type="button"
+        disabled={continuing}
+        className="w-full rounded-full bg-[#241c16] px-5 py-3 text-sm font-medium text-[#f7f1e8] hover:bg-[#3a2e24] disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
+        onClick={() => {
+          if (continuing) return
+          setContinuing(true)
+          navigate('/match')
+        }}
+      >
+        {continuing ? 'Preparando tu match…' : 'Ver a mi gatito'}
+      </button>
     </Frame>
   )
 }

@@ -35,6 +35,11 @@ const config = {
       "title": "Compañía"
     },
     {
+      "id": "descanso",
+      "path": "/quiz/descanso",
+      "title": "Descanso"
+    },
+    {
       "id": "match",
       "path": "/match",
       "title": "Tu gatito"
