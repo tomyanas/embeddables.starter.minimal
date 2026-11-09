@@ -36,7 +36,7 @@ export function EnergiaPage() {
   usePageView({ pageKey: 'energia' })
 
   return (
-    <Frame step={1} eyebrow="La casa" title="¿Cómo se siente un martes a la noche?">
+    <Frame step={1} eyebrow="La casa" title="hello world">
       <Choice
         title="Calma"
         detail="Un libro, una lámpara, y nadie corre por el pasillo."
