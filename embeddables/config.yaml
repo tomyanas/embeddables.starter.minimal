@@ -15,6 +15,7 @@ enabledModules:
   experiments: false
   forms: true
   protocols: false
+record_session_replay: true
 pages:
   - id: bienvenida
     title: Bienvenida
@@ -24,22 +25,22 @@ pages:
   - id: energia
     title: Energía
     path: /quiz/energia
-    type: form
+    type: question
     app: app
   - id: hogar
     title: Hogar
     path: /quiz/hogar
-    type: form
+    type: question
     app: app
   - id: compania
     title: Compañía
     path: /quiz/compania
-    type: form
+    type: question
     app: app
   - id: nacimiento
     title: Fecha de nacimiento
     path: /quiz/nacimiento
-    type: form
+    type: question
     app: app
   - id: match
     title: Tu gatito
@@ -64,12 +65,12 @@ pages:
   - id: adopta-energia
     title: Adopta - Energía
     path: /adopta/energia
-    type: form
+    type: question
     app: app
   - id: adopta-hogar
     title: Adopta - Hogar
     path: /adopta/hogar
-    type: form
+    type: question
     app: app
   - id: adopta-match
     title: Adopta - Tu gatito
@@ -79,7 +80,7 @@ pages:
   - id: adopta-contacto
     title: Adopta - Contacto
     path: /adopta/contacto
-    type: form
+    type: question
     app: app
 # Embeddables Hosting builds and deploys these apps on every push. `pnpm build` writes both
 # folders; see "Build output" in AGENTS.md.
