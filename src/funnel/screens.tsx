@@ -192,7 +192,9 @@ function BirthDateForm() {
         <input
           className="w-full rounded-2xl border border-[#eadccc] bg-white px-3 py-3 text-base outline-none focus:border-[#d4653a] disabled:opacity-60"
           type="date"
-          name="bday"
+          name="nacimiento"
+          // * rrweb names the field from aria-label. The visible text is on the span.
+          aria-label="Fecha de nacimiento"
           autoComplete="bday"
           min="1900-01-01"
           max={todayIso()}
@@ -297,6 +299,8 @@ function VisitForm() {
     >
       <Field
         label="Nombre"
+        name="name"
+        autoComplete="name"
         value={(name.value as string | undefined) ?? ''}
         error={name.error?.[0]}
         onChange={(value) => name.setValue(value)}
@@ -304,7 +308,9 @@ function VisitForm() {
       />
       <Field
         label="Mail"
+        name="email"
         type="email"
+        autoComplete="email"
         value={(email.value as string | undefined) ?? ''}
         error={email.error?.[0]}
         onChange={(value) => email.setValue(value)}
@@ -323,6 +329,7 @@ function VisitForm() {
 
 function Field({
   label,
+  name,
   value,
   error,
   onChange,
@@ -332,6 +339,7 @@ function Field({
   disabled,
 }: {
   label: string
+  name: string
   value: string
   error?: string
   onChange: (value: string) => void
@@ -346,6 +354,9 @@ function Field({
       <input
         className="w-full rounded-2xl border border-[#eadccc] bg-white px-3 py-3 text-base outline-none focus:border-[#d4653a] disabled:opacity-60"
         type={type}
+        name={name}
+        // * rrweb names the field from aria-label. The visible text is on the span.
+        aria-label={label}
         value={value}
         autoComplete={autoComplete}
         disabled={disabled}
@@ -569,6 +580,7 @@ function AdoptaLeadForm() {
     >
       <Field
         label="Nombre"
+        name="name"
         autoComplete="name"
         disabled={submitting}
         value={(name.value as string | undefined) ?? ''}
@@ -578,6 +590,7 @@ function AdoptaLeadForm() {
       />
       <Field
         label="Mail"
+        name="email"
         type="email"
         autoComplete="email"
         disabled={submitting}
