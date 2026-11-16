@@ -82,6 +82,11 @@ pages:
     path: /adopta/contacto
     type: question
     app: app
+  - id: cuidados
+    title: Cuidados
+    path: /cuidados
+    type: marketing
+    app: app
 # Embeddables Hosting builds and deploys these apps on every push. `pnpm build` writes both
 # folders; see "Build output" in AGENTS.md.
 hosting:
