@@ -27,6 +27,11 @@ pages:
     path: /quiz/energia
     type: question
     app: app
+  - id: descanso-rutina
+    title: Descanso - Rutina
+    path: /quiz/descanso-rutina
+    type: marketing
+    app: app
   - id: hogar
     title: Hogar
     path: /quiz/hogar
@@ -37,10 +42,10 @@ pages:
     path: /quiz/compania
     type: question
     app: app
-  - id: nacimiento
-    title: Fecha de nacimiento
-    path: /quiz/nacimiento
-    type: question
+  - id: descanso-casa
+    title: Descanso - Casa
+    path: /quiz/descanso-casa
+    type: marketing
     app: app
   - id: match
     title: Tu gatito
@@ -56,36 +61,6 @@ pages:
     title: Gracias
     path: /gracias
     type: landing
-    app: app
-  - id: adopta
-    title: Adopta
-    path: /adopta
-    type: marketing
-    app: app
-  - id: adopta-energia
-    title: Adopta - Energía
-    path: /adopta/energia
-    type: question
-    app: app
-  - id: adopta-hogar
-    title: Adopta - Hogar
-    path: /adopta/hogar
-    type: question
-    app: app
-  - id: adopta-match
-    title: Adopta - Tu gatito
-    path: /adopta/match
-    type: pdp
-    app: app
-  - id: adopta-contacto
-    title: Adopta - Contacto
-    path: /adopta/contacto
-    type: question
-    app: app
-  - id: cuidados
-    title: Cuidados
-    path: /cuidados
-    type: marketing
     app: app
 # Embeddables Hosting builds and deploys these apps on every push. `pnpm build` writes both
 # folders; see "Build output" in AGENTS.md.
