@@ -393,6 +393,26 @@ export function GraciasPage() {
   )
 }
 
+export function CuidadosPage() {
+  usePageView({ pageKey: 'cuidados' })
+
+  return (
+    <Frame
+      eyebrow="Cuidados"
+      title="Lo básico para tu gatito."
+      lede="Agua fresca, un lugar tranquilo para dormir y mucho juego. Antes de adoptar, prepará la casa."
+    >
+      <button
+        type="button"
+        className="w-fit text-sm font-medium text-[#d4653a] underline-offset-4 hover:underline"
+        onClick={() => window.location.assign('/')}
+      >
+        Empezar el quiz
+      </button>
+    </Frame>
+  )
+}
+
 // * "Adopta" funnel: cold traffic -> short quiz -> match -> lead capture -> /gracias.
 const ADOPTA_PATHS = {
   energia: '/adopta/energia',

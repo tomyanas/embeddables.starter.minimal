@@ -25,6 +25,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
 
-      - uses: heysavvy/embeddables-actions/embeddables-deploy@v1
+      # TODO: switch to @v3 once heysavvy/embeddables-actions tags it.
+      - uses: heysavvy/embeddables-actions/embeddables-deploy@main
         with:
           deploy-key: ${{ secrets.EMBEDDABLES_DEPLOY_KEY }}

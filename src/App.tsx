@@ -10,6 +10,7 @@ import {
   AdoptaLandingPage,
   AdoptaMatchPage,
   CompaniaPage,
+  CuidadosPage,
   EnergiaPage,
   GraciasPage,
   HogarPage,
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="adopta/hogar" element={<AdoptaHogarPage />} />
         <Route path="adopta/match" element={<AdoptaMatchPage />} />
         <Route path="adopta/contacto" element={<AdoptaContactoPage />} />
+        <Route path="cuidados" element={<CuidadosPage />} />
       </Routes>
     </EmbeddablesProvider>
   )
