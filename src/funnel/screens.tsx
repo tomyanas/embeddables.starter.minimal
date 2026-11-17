@@ -10,22 +10,23 @@ import {
   saveCompania,
   saveEnergia,
   saveHogar,
-  saveNacimiento,
 } from '@/funnel/answers.ts'
 import { CatMark } from '@/funnel/CatMark.tsx'
+import type { Compania, Energia, Hogar } from '@/funnel/kittens.ts'
 import { chosenKitten } from '@/funnel/kittens.ts'
 import { Choice, Frame, NextLink } from '@/funnel/Shell.tsx'
 
 const CONTACT_FORM_ID = '00000000-0000-4000-8000-000000000001'
+const QUIZ_STEPS = 4
 
 export function WelcomePage() {
   usePageView({ pageKey: 'bienvenida' })
 
   return (
     <Frame
-      eyebrow="Cinco pasos"
+      eyebrow="Cuatro pasos"
       title="Un gatito, no un catálogo."
-      lede="Contestá cuatro preguntas y te presentamos al que mejor encaja con tu casa. El mail queda para el final."
+      lede="Contestá tres preguntas y te presentamos al que mejor encaja con tu casa. El mail queda para el final."
     >
       <NextLink to="/quiz/energia">Empezar</NextLink>
     </Frame>
@@ -37,13 +38,18 @@ export function EnergiaPage() {
   usePageView({ pageKey: 'energia' })
 
   return (
-    <Frame step={1} total={5} eyebrow="La casa" title="¿Cómo se siente un martes a la noche?">
+    <Frame
+      step={1}
+      total={QUIZ_STEPS}
+      eyebrow="La casa"
+      title="¿Cómo se siente un martes a la noche?"
+    >
       <Choice
         title="Calma"
         detail="Un libro, una lámpara, y nadie corre por el pasillo."
         onClick={() => {
           saveEnergia('calma')
-          navigate('/quiz/hogar')
+          navigate('/quiz/descanso-rutina')
         }}
       />
       <Choice
@@ -51,9 +57,38 @@ export function EnergiaPage() {
         detail="Siempre hay alguien persiguiendo algo, aunque sea una tapa."
         onClick={() => {
           saveEnergia('juego')
-          navigate('/quiz/hogar')
+          navigate('/quiz/descanso-rutina')
         }}
       />
+    </Frame>
+  )
+}
+
+const RUTINA_TIPS: Record<Energia, readonly string[]> = {
+  calma: [
+    'Armale un rincón tranquilo con una manta, lejos del paso.',
+    'Un rascador cerca de la ventana le da sol y algo para mirar.',
+    'Con diez minutos de juego suave por día alcanza para que duerma bien.',
+  ],
+  juego: [
+    'Dos ratos de juego por día con una caña o una pelotita le gastan la energía.',
+    'Rotá los juguetes cada semana para que no se aburra.',
+    'Un comedero interactivo convierte la cena en una cacería.',
+  ],
+}
+
+export function DescansoRutinaPage() {
+  usePageView({ pageKey: 'descanso-rutina' })
+  const energia = readAnswers().energia ?? 'calma'
+
+  return (
+    <Frame
+      eyebrow="Una pausa"
+      title="Tu ritmo también es el suyo."
+      lede="Antes de seguir, algunas ideas para que la rutina de la casa le quede cómoda."
+    >
+      <Tips tips={RUTINA_TIPS[energia]} />
+      <NextLink to="/quiz/hogar">Seguir</NextLink>
     </Frame>
   )
 }
@@ -63,7 +98,7 @@ export function HogarPage() {
   usePageView({ pageKey: 'hogar' })
 
   return (
-    <Frame step={2} total={5} eyebrow="El lugar" title="¿Dónde va a dormir la siesta?">
+    <Frame step={2} total={QUIZ_STEPS} eyebrow="El lugar" title="¿Dónde va a dormir la siesta?">
       <Choice
         title="Departamento"
         detail="Una ventana, un sillón, y el sol de las tres."
@@ -89,13 +124,13 @@ export function CompaniaPage() {
   usePageView({ pageKey: 'compania' })
 
   return (
-    <Frame step={3} total={5} eyebrow="Vos" title="¿Qué querés que haga cuando llegás?">
+    <Frame step={3} total={QUIZ_STEPS} eyebrow="Vos" title="¿Qué querés que haga cuando llegás?">
       <Choice
         title="Que se suba y se quede"
         detail="Compañía de siesta. Poco teatro."
         onClick={() => {
           saveCompania('siesta')
-          navigate('/quiz/nacimiento')
+          navigate('/quiz/descanso-casa')
         }}
       />
       <Choice
@@ -103,124 +138,61 @@ export function CompaniaPage() {
         detail="Una hoja, un cordón, una carrera hasta la cocina."
         onClick={() => {
           saveCompania('travesura')
-          navigate('/quiz/nacimiento')
+          navigate('/quiz/descanso-casa')
         }}
       />
     </Frame>
   )
 }
 
-function todayIso() {
-  const now = new Date()
-  const month = String(now.getMonth() + 1).padStart(2, '0')
-  const day = String(now.getDate()).padStart(2, '0')
-  return `${now.getFullYear()}-${month}-${day}`
+const HOGAR_TIPS: Record<Hogar, readonly string[]> = {
+  depto: [
+    'Poné mallas en ventanas y balcón antes de que llegue.',
+    'Estantes o un rascador alto le suman metros para trepar.',
+  ],
+  casa: [
+    'Revisá que las plantas del patio no sean tóxicas, como lirios o potus.',
+    'Un collar con identificación y el chip te dan tranquilidad si sale.',
+  ],
 }
 
-function birthDateError(value: string): string | null {
-  if (value.trim() === '') return 'Elegí tu fecha de nacimiento.'
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return 'Ingresá una fecha válida.'
-  const parsed = new Date(`${value}T00:00:00`)
-  if (Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== value) {
-    return 'Ingresá una fecha válida.'
-  }
-  if (value > todayIso()) return 'La fecha no puede ser futura.'
-  if (value < '1900-01-01') return 'Ingresá una fecha válida.'
-  return null
+const COMPANIA_TIPS: Record<Compania, string> = {
+  siesta: 'Dejale una cama cerca de tu lugar favorito del sillón.',
+  travesura: 'Guardá cordones, gomitas y cables: van a ser su primer botín.',
 }
 
-export function NacimientoPage() {
-  const embeddables = useEmbeddables()
-  usePageView({ pageKey: 'nacimiento' })
-  const initError =
-    embeddables?.isError && embeddables.error instanceof Error
-      ? embeddables.error.message
-      : embeddables?.isError
-        ? 'Embeddables no pudo iniciar.'
-        : null
+export function DescansoCasaPage() {
+  usePageView({ pageKey: 'descanso-casa' })
+  const answers = readAnswers()
+  const tips = [
+    ...HOGAR_TIPS[answers.hogar ?? 'depto'],
+    COMPANIA_TIPS[answers.compania ?? 'siesta'],
+  ]
 
   return (
     <Frame
-      step={4}
-      total={5}
-      eyebrow="Vos"
-      title="¿Cuándo naciste?"
-      lede="Lo usamos para conocerte un poco mejor antes de presentarte a tu gatito."
+      eyebrow="Otra pausa"
+      title="Preparar la casa lleva poco."
+      lede="Tu gatito ya está casi elegido. Mientras tanto, esto ayuda a que el primer día sea fácil."
     >
-      {initError ? (
-        <p role="alert" className="text-sm text-red-800">
-          {initError}
-        </p>
-      ) : embeddables == null ? (
-        <p role="status" className="text-sm text-[#6d5b4d]">
-          Cargando…
-        </p>
-      ) : (
-        <BirthDateForm />
-      )}
+      <Tips tips={tips} />
+      <NextLink to="/match">Conocer a mi gatito</NextLink>
     </Frame>
   )
 }
 
-function BirthDateForm() {
-  const navigate = useNavigate()
-  const { form } = useForm({ formId: CONTACT_FORM_ID })
-  const birthDate = useFormField({ form, key: 'birth_date' })
-  const [value, setValue] = useState(readAnswers().nacimiento ?? '')
-  const [error, setError] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-
+function Tips({ tips }: { tips: readonly string[] }) {
   return (
-    <form
-      className="space-y-4"
-      noValidate
-      aria-busy={submitting}
-      onSubmit={(event) => {
-        event.preventDefault()
-        if (submitting) return
-        const message = birthDateError(value)
-        setError(message)
-        if (message != null) return
-        setSubmitting(true)
-        saveNacimiento(value)
-        birthDate.setValue(value)
-        navigate('/match')
-      }}
-    >
-      <label className="block space-y-1">
-        <span className="text-sm font-medium">Fecha de nacimiento</span>
-        <input
-          className="w-full rounded-2xl border border-[#eadccc] bg-white px-3 py-3 text-base outline-none focus:border-[#d4653a] disabled:opacity-60"
-          type="date"
-          name="nacimiento"
-          // * rrweb names the field from aria-label. The visible text is on the span.
-          aria-label="Fecha de nacimiento"
-          autoComplete="bday"
-          min="1900-01-01"
-          max={todayIso()}
-          value={value}
-          disabled={submitting}
-          aria-invalid={error ? true : undefined}
-          aria-describedby={error ? 'nacimiento-error' : undefined}
-          onChange={(event) => {
-            setValue(event.target.value)
-            if (error != null) setError(null)
-          }}
-        />
-        {error ? (
-          <p id="nacimiento-error" role="alert" className="text-sm text-red-800">
-            {error}
-          </p>
-        ) : null}
-      </label>
-      <button
-        type="submit"
-        disabled={form == null || submitting}
-        className="w-full rounded-full bg-[#241c16] px-5 py-3 text-sm font-medium text-[#f7f1e8] hover:bg-[#3a2e24] disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
-      >
-        {submitting ? 'Guardando…' : 'Continuar'}
-      </button>
-    </form>
+    <ul className="space-y-3">
+      {tips.map((tip) => (
+        <li
+          key={tip}
+          className="rounded-2xl border border-[#eadccc] bg-[#fff8f1] px-4 py-3 text-sm leading-relaxed text-[#5c4d42]"
+        >
+          {tip}
+        </li>
+      ))}
+    </ul>
   )
 }
 
@@ -229,7 +201,12 @@ export function MatchPage() {
   const kitten = chosenKitten(readAnswers())
 
   return (
-    <Frame step={5} total={5} eyebrow="Tu match" title={`${kitten.name} te está esperando.`}>
+    <Frame
+      step={4}
+      total={QUIZ_STEPS}
+      eyebrow="Tu match"
+      title={`${kitten.name} te está esperando.`}
+    >
       <article className="overflow-hidden rounded-[2rem] border border-[#eadccc] bg-[#fff8f1]">
         <div className="flex justify-center bg-[#f6e6d6] pt-4">
           <CatMark kitten={kitten} className="h-40 w-44" />
@@ -336,7 +313,6 @@ function Field({
   onBlur,
   type = 'text',
   autoComplete,
-  disabled,
 }: {
   label: string
   name: string
@@ -346,20 +322,18 @@ function Field({
   onBlur: () => void
   type?: string
   autoComplete?: string
-  disabled?: boolean
 }) {
   return (
     <label className="block space-y-1">
       <span className="text-sm font-medium">{label}</span>
       <input
-        className="w-full rounded-2xl border border-[#eadccc] bg-white px-3 py-3 text-base outline-none focus:border-[#d4653a] disabled:opacity-60"
+        className="w-full rounded-2xl border border-[#eadccc] bg-white px-3 py-3 text-base outline-none focus:border-[#d4653a]"
         type={type}
         name={name}
         // * rrweb names the field from aria-label. The visible text is on the span.
         aria-label={label}
         value={value}
         autoComplete={autoComplete}
-        disabled={disabled}
         aria-invalid={error ? true : undefined}
         onChange={(event) => onChange(event.target.value)}
         onBlur={onBlur}
@@ -390,247 +364,5 @@ export function GraciasPage() {
         Empezar de nuevo
       </button>
     </Frame>
-  )
-}
-
-export function CuidadosPage() {
-  usePageView({ pageKey: 'cuidados' })
-
-  return (
-    <Frame
-      eyebrow="Cuidados"
-      title="Lo básico para tu gatito."
-      lede="Agua fresca, un lugar tranquilo para dormir y mucho juego. Antes de adoptar, prepará la casa."
-    >
-      <button
-        type="button"
-        className="w-fit text-sm font-medium text-[#d4653a] underline-offset-4 hover:underline"
-        onClick={() => window.location.assign('/')}
-      >
-        Empezar el quiz
-      </button>
-    </Frame>
-  )
-}
-
-// * "Adopta" funnel: cold traffic -> short quiz -> match -> lead capture -> /gracias.
-const ADOPTA_PATHS = {
-  energia: '/adopta/energia',
-  hogar: '/adopta/hogar',
-  match: '/adopta/match',
-  contacto: '/adopta/contacto',
-} as const
-
-const ADOPTA_PROOF_POINTS = [
-  'Menos de un minuto',
-  'Gatitos con historia real',
-  'El mail queda para el final',
-] as const
-
-export function AdoptaLandingPage() {
-  usePageView({ pageKey: 'adopta' })
-
-  return (
-    <Frame
-      eyebrow="Adoptar con calma"
-      title="Encontrá al gatito que encaja con tu casa."
-      lede="Dos preguntas, un match y una visita. Sin catálogos eternos y sin compromiso."
-    >
-      <ul className="grid gap-3 sm:grid-cols-3">
-        {ADOPTA_PROOF_POINTS.map((point) => (
-          <li
-            key={point}
-            className="rounded-2xl border border-[#eadccc] bg-[#fff8f1] px-4 py-3 text-sm text-[#5c4d42]"
-          >
-            {point}
-          </li>
-        ))}
-      </ul>
-      <NextLink to={ADOPTA_PATHS.energia}>Encontrar mi match</NextLink>
-    </Frame>
-  )
-}
-
-export function AdoptaEnergiaPage() {
-  const navigate = useNavigate()
-  usePageView({ pageKey: 'adopta-energia' })
-
-  return (
-    <Frame step={1} eyebrow="La casa" title="¿Cómo se siente un martes a la noche?">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Choice
-          title="Calma"
-          detail="Un libro, una lámpara, y nadie corre por el pasillo."
-          onClick={() => {
-            saveEnergia('calma')
-            navigate(ADOPTA_PATHS.hogar)
-          }}
-        />
-        <Choice
-          title="Juego"
-          detail="Siempre hay alguien persiguiendo algo, aunque sea una tapa."
-          onClick={() => {
-            saveEnergia('juego')
-            navigate(ADOPTA_PATHS.hogar)
-          }}
-        />
-      </div>
-    </Frame>
-  )
-}
-
-export function AdoptaHogarPage() {
-  const navigate = useNavigate()
-  usePageView({ pageKey: 'adopta-hogar' })
-
-  return (
-    <Frame step={2} eyebrow="El lugar" title="¿Dónde va a dormir la siesta?">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Choice
-          title="Departamento"
-          detail="Una ventana, un sillón, y el sol de las tres."
-          onClick={() => {
-            saveHogar('depto')
-            navigate(ADOPTA_PATHS.match)
-          }}
-        />
-        <Choice
-          title="Casa"
-          detail="Patio, macetas, y una puerta que se abre."
-          onClick={() => {
-            saveHogar('casa')
-            navigate(ADOPTA_PATHS.match)
-          }}
-        />
-      </div>
-    </Frame>
-  )
-}
-
-export function AdoptaMatchPage() {
-  usePageView({ pageKey: 'adopta-match' })
-  const kitten = chosenKitten(readAnswers())
-
-  return (
-    <Frame step={3} eyebrow="Tu match" title={`${kitten.name} te está esperando.`}>
-      <article className="overflow-hidden rounded-[2rem] border border-[#eadccc] bg-[#fff8f1]">
-        <div className="flex justify-center bg-[#f6e6d6] pt-4">
-          <CatMark kitten={kitten} className="h-40 w-44" />
-        </div>
-        <div className="space-y-3 px-5 py-5">
-          <p className="text-lg leading-snug">{kitten.line}</p>
-          <p className="text-sm leading-relaxed text-[#5c4d42]">{kitten.story}</p>
-          <p className="text-sm text-[#8a7564]">
-            {kitten.coat} · {kitten.age}
-          </p>
-        </div>
-      </article>
-      <NextLink to={ADOPTA_PATHS.contacto}>Quiero conocer a {kitten.name}</NextLink>
-    </Frame>
-  )
-}
-
-export function AdoptaContactoPage() {
-  const embeddables = useEmbeddables()
-  const kitten = chosenKitten(readAnswers())
-  usePageView({ pageKey: 'adopta-contacto' })
-  const initError =
-    embeddables?.isError && embeddables.error instanceof Error
-      ? embeddables.error.message
-      : embeddables?.isError
-        ? 'Embeddables no pudo iniciar.'
-        : null
-
-  return (
-    <Frame
-      step={4}
-      eyebrow={kitten.name}
-      title="¿A dónde te escribimos?"
-      lede={`Dejá tu nombre y tu mail y te contamos cómo conocer a ${kitten.name}.`}
-    >
-      {initError ? (
-        <p role="alert" className="text-sm text-red-800">
-          {initError}
-        </p>
-      ) : embeddables == null ? (
-        <p role="status" className="text-sm text-[#6d5b4d]">
-          Cargando…
-        </p>
-      ) : (
-        <AdoptaLeadForm />
-      )}
-    </Frame>
-  )
-}
-
-function AdoptaLeadForm() {
-  const navigate = useNavigate()
-  const { form } = useForm({ formId: CONTACT_FORM_ID })
-  const name = useFormField({ form, key: 'name' })
-  const email = useFormField({ form, key: 'email' })
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-
-  return (
-    <form
-      className="space-y-4"
-      noValidate
-      aria-busy={submitting}
-      onSubmit={(event) => {
-        event.preventDefault()
-        if (form == null || submitting) return
-        setSubmitError(null)
-        setSubmitting(true)
-        void form
-          .submit()
-          .then((result) => {
-            if (result.ok) {
-              navigate('/gracias')
-              return
-            }
-            setSubmitError('Revisá el nombre y el mail.')
-          })
-          .catch(() => {
-            setSubmitError('No pudimos enviar tus datos. Probá de nuevo en un momento.')
-          })
-          .finally(() => {
-            setSubmitting(false)
-          })
-      }}
-    >
-      <Field
-        label="Nombre"
-        name="name"
-        autoComplete="name"
-        disabled={submitting}
-        value={(name.value as string | undefined) ?? ''}
-        error={name.error?.[0]}
-        onChange={(value) => name.setValue(value)}
-        onBlur={() => void name.onBlur()}
-      />
-      <Field
-        label="Mail"
-        name="email"
-        type="email"
-        autoComplete="email"
-        disabled={submitting}
-        value={(email.value as string | undefined) ?? ''}
-        error={email.error?.[0]}
-        onChange={(value) => email.setValue(value)}
-        onBlur={() => void email.onBlur()}
-      />
-      {submitError ? (
-        <p role="alert" className="text-sm text-red-800">
-          {submitError}
-        </p>
-      ) : null}
-      <button
-        type="submit"
-        disabled={form == null || submitting}
-        className="w-full rounded-full bg-[#241c16] px-5 py-3 text-sm font-medium text-[#f7f1e8] hover:bg-[#3a2e24] disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
-      >
-        {submitting ? 'Enviando…' : 'Quiero conocerlo'}
-      </button>
-    </form>
   )
 }

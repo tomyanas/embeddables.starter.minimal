@@ -25,6 +25,11 @@ const config = {
       "title": "Energía"
     },
     {
+      "id": "descanso-rutina",
+      "path": "/quiz/descanso-rutina",
+      "title": "Descanso - Rutina"
+    },
+    {
       "id": "hogar",
       "path": "/quiz/hogar",
       "title": "Hogar"
@@ -35,9 +40,9 @@ const config = {
       "title": "Compañía"
     },
     {
-      "id": "nacimiento",
-      "path": "/quiz/nacimiento",
-      "title": "Fecha de nacimiento"
+      "id": "descanso-casa",
+      "path": "/quiz/descanso-casa",
+      "title": "Descanso - Casa"
     },
     {
       "id": "match",
@@ -53,31 +58,6 @@ const config = {
       "id": "gracias",
       "path": "/gracias",
       "title": "Gracias"
-    },
-    {
-      "id": "adopta",
-      "path": "/adopta",
-      "title": "Adopta"
-    },
-    {
-      "id": "adopta-energia",
-      "path": "/adopta/energia",
-      "title": "Adopta - Energía"
-    },
-    {
-      "id": "adopta-hogar",
-      "path": "/adopta/hogar",
-      "title": "Adopta - Hogar"
-    },
-    {
-      "id": "adopta-match",
-      "path": "/adopta/match",
-      "title": "Adopta - Tu gatito"
-    },
-    {
-      "id": "adopta-contacto",
-      "path": "/adopta/contacto",
-      "title": "Adopta - Contacto"
     }
   ]
 } as const;
