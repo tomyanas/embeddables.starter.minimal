@@ -18,7 +18,7 @@ enabledModules:
 record_session_replay: true
 pages:
   - id: bienvenida
-    title: Bienvenida
+    title: Bienvenida - prueba DEV-2917
     path: /
     type: marketing
     app: app
