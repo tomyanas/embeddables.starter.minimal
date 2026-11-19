@@ -26,6 +26,6 @@ jobs:
       - run: pnpm build
 
       # TODO: switch to @v3 once heysavvy/embeddables-actions tags it.
-      - uses: heysavvy/embeddables-actions/embeddables-deploy@v3
+      - uses: heysavvy/embeddables-actions/embeddables-deploy@v2
         with:
           deploy-key: ${{ secrets.EMBEDDABLES_DEPLOY_KEY }}
